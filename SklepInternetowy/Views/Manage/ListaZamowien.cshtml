@@ -1,0 +1,117 @@
+﻿@model IEnumerable<SklepInternetowy.Models.Order>
+@{
+    ViewBag.Title = "ListaZamowien";
+    Layout = "~/Views/Shared/_ManageLayout.cshtml";
+}
+
+<div>
+    <hr />
+    <h2 class="manageHeader">Twoje zamówienia</h2>
+
+    <div>
+        @if (Model.Any())
+        {
+            <table id="zamowienia-table">
+
+                @foreach (var zamowienie in Model)
+                {
+                    <tr @if (zamowienie.OrderStatus == SklepInternetowy.Models.OrderStatus.Nowe) { <text> class="noweZamowienie" </text> }>
+                        <td>
+                            <strong>Nr zamówienia: </strong>@zamowienie.OrderId
+                        </td>
+                        <td>
+                            <strong>Data: </strong>
+                            @zamowienie.DateAdd.ToString("dd-MM-yyyy")
+                        </td>
+                        <td>
+                            <strong>Stan: </strong><br />
+
+                            @if (ViewBag.UserIsAdmin)
+                            {
+                                using (Html.BeginForm("ZmianaStanuZamowienia", "Manage"))
+                                {
+                                    @Html.HiddenFor(o => zamowienie.OrderId)
+                                    @Html.EnumDropDownListFor(o => zamowienie.OrderStatus, new { @class = "StanZamowieniaZmien" })
+                                }
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(o => zamowienie.OrderStatus)
+                            }
+                        </td>
+                        <td>
+                            <strong>Dane wysyłkowe:</strong><br />
+                            @zamowienie.FirstName @zamowienie.LastName<br />
+                            @zamowienie.Street<br />
+                            @zamowienie.Postmal @zamowienie.City<br />
+                        </td>
+                        <td>
+                            <strong>Uwagi: </strong><br />
+                            @zamowienie.Comment
+                        </td>
+                        <td>
+                            <strong>Łączny koszt:</strong> @zamowienie.Value zł
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <section>
+                                <ul class="TrzyKolumnyList duzaListaKursy-bottom">
+
+                                    @foreach (var pozycjaZamowienia in zamowienie.OrderPostion)
+                                    {
+                                        <li>
+                                            <article>
+                                                <a class="kursSzczegolyLink" href="@Url.Action("Szczegoly", "Kursy", new { id = pozycjaZamowienia.KursId })">
+                                                    <img class="kurs" src="@Url.Content("~/Content/Kursy/" + pozycjaZamowienia.Kurs.NameImg)" />
+                                                    <h1>
+                                                        @pozycjaZamowienia.Kurs.Author - @pozycjaZamowienia.Kurs.Title<br />
+                                                        <strong>sztuk: @pozycjaZamowienia.quantity, łącznie: @(pozycjaZamowienia.quantity * @pozycjaZamowienia.OrderCost)  zł</strong>
+                                                    </h1>
+                                                </a>
+                                            </article>
+                                        </li>
+                                    }
+                                </ul>
+                            </section>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                    </tr>
+                    <!-- nastepne zamowienie -->
+                }
+            </table>
+        }
+        else
+        {
+            <div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+                Brak zamówień.
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    
+    <script src="~/Scripts/jquery-3.6.0.js"></script>
+
+    <script>
+    $(".StanZamowieniaZmien").on('change', function (e) {
+        //e.preventDefault();
+        var f = $(this.form);
+        var tr = f.closest("tr");
+        var action = f.attr("action");
+        var serializedForm = f.serialize();
+        $.post(action, serializedForm).done(function (data) {
+            if (data == '@SklepInternetowy.Models.OrderStatus.Nowe.ToString()') {
+                tr.addClass("noweZamowienie")
+            }
+            else {
+                tr.removeClass("noweZamowienie");
+            }
+          });
+    });
+    </script>
+}

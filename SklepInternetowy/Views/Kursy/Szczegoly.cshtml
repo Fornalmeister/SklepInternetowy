@@ -1,0 +1,50 @@
+﻿@model SklepInternetowy.Models.Kurs
+@using SklepInternetowy.Infrastructure
+
+@{
+    ViewBag.Title = "Szczegoly";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="ListaKategoriZawartosc">
+    @Html.Action("KategorieMenu")
+    <div id="KategorieListPrawaSekcja">
+        <div id="Breadcrumb">
+            <img src="../Content/Images/dommaly.png" />
+            <a href="link">
+                @Html.MvcSiteMap().SiteMapPath()
+            </a>
+        </div>
+        <section id="SekcjaKurs">
+            <div id="KursLewa">
+                <img src="@Url.ObrazkiSciezka(Model.NameImg)" />
+            </div>
+            <div id="KursPrawa">
+                <div id="KursNazwa">
+                    <h1>
+                        @Model.Title
+                    </h1>
+                    <h2>
+                        @Model.Author
+                    </h2>
+                </div>
+                <div id="KursCena">
+                    <div>
+                        @Model.Price<span>PLN</span>
+                    </div>
+                    <a href="@Url.Action("DodajDoKoszyka","Koszyk",new {id = Model.KursId})"></a>
+                </div>
+                <div id="KursOpis">
+                    @Model.Description
+                </div>
+                <div id="KursInfo">
+                    @Model.DescriptionShort
+                </div>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a href="@Url.Action("DodajKurs", "Manage", new { kursId = Model.KursId })" style="margin-top: 20px; font-weight: bold; display: block;">Edytuj</a>
+                }
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+﻿@model SklepInternetowy.Models.Order
+
+@{
+    ViewBag.Title = "Zaplac";
+    Layout = "~/Views/Shared/_RightSectionLayout.cshtml";
+}
+
+@section SectionTitle{
+    Uzupełnij dane zamówienia
+}
+
+
+@using (@Html.BeginForm("Zaplac", "Koszyk"))
+{
+    <table id="checkout-address-table">
+        <tr>
+            <td>@Html.LabelFor(o => o.FirstName, "Imię:")</td>
+            <td>@Html.TextBoxFor(o => o.FirstName)</td>
+            <td>@Html.ValidationMessageFor(o => o.FirstName)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(o => o.LastName, "Nazwisko")</td>
+            <td>@Html.TextBoxFor(o => o.LastName)</td>
+            <td>@Html.ValidationMessageFor(o => o.LastName)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(o => o.Street, "Adres")</td>
+            <td>@Html.TextBoxFor(o => o.Street)</td>
+            <td>@Html.ValidationMessageFor(o => o.Street)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(o => o.City, "Miasto")</td>
+            <td>@Html.TextBoxFor(o => o.City)</td>
+            <td>@Html.ValidationMessageFor(o => o.City)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(o => o.Postmal, "Kod pocztowy")</td>
+            <td>@Html.TextBoxFor(o => o.Postmal)</td>
+            <td>@Html.ValidationMessageFor(o => o.Postmal)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(o => o.Phone, "Numer telefonu")</td>
+            <td>@Html.TextBoxFor(o => o.Phone)</td>
+            <td>@Html.ValidationMessageFor(o => o.Phone)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(o => o.Email, "Adres e-mail")</td>
+            <td>@Html.TextBoxFor(o => o.Email)</td>
+            <td>@Html.ValidationMessageFor(o => o.Email)</td>
+        </tr>
+        <tr>
+            <td><label for="Komentarz">Uwagi</label></td>
+            <td>
+                <textarea cols="40" rows="3" name="Komentarz">@Model.Comment</textarea>
+            </td>
+        </tr>
+    </table>
+
+    @Html.ValidationSummary()
+
+    <hr style="margin-bottom: 50px;" />
+
+    <div class="SekcjaPrzyciski">
+        <a class="PrzyciskLink" href="">Wróć</a>
+        <input type="submit" class="PrzyciskLink" style="" value="Potwierdź" />
+    </div>
+}
